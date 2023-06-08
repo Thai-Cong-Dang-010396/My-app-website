@@ -5,7 +5,7 @@ import { combineReducers, applyMiddleware } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
 import thunk from '@reduxjs/toolkit';
 
-import rootReducer from './random_quote_machine/redux/reducers';
+import rootReducer from './redux/reducers';
 import App from './App';
 
 const store = configureStore({
