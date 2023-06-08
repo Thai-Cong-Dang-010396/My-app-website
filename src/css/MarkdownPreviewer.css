@@ -30,7 +30,7 @@
     box-shadow: 0 0 30px rgba(0, 0, 0, .5);
 }
 
-.editorWrap .toolbar {
+.editorWrap .toolbar, .previewWrap .toolbar{
     position: relative;
     background: rgba(255, 255, 255, .5);
     color: #162938;
@@ -61,4 +61,16 @@
     height: 80%;
     background: cornsilk;
     color: #162938;
+}
+
+.previewWrap {
+    position: relative;
+    top: 40px;
+    width: 80%;
+    min-height: 400px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, .5);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+    color: #fff;
 }
