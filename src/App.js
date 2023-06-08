@@ -12,16 +12,14 @@ const App = () => {
         getQuotes();
     }, []);
 
-    const getQuotes = () => {
-        fetch(API_URL)
-        .then(res => res.json())
-        .then(data => {
-            const dataQuotes = data.quotes;
-            let randomIndex = Math.floor(Math.random() * dataQuotes.length);
-            let randomQuote = dataQuotes[randomIndex];
-            setQuotes(randomQuote.quote);
-            setAuthor(randomQuote.author);
-        })
+    const getQuotes = async() => {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        const dataQuotes = data.quotes;
+        let randomIndex = Math.floor(Math.random() * dataQuotes.length);
+        let randomQuote = dataQuotes[randomIndex];
+        setQuotes(randomQuote.quote);
+        setAuthor(randomQuote.author);
     };
 
     const handleClick = () => {
@@ -32,23 +30,33 @@ const App = () => {
         <div id='wrapper'>
             <div id='quote-box'>
                 <div id='text'>
+                    <i class="fa fa-quote-left"></i>
                     {quotes}
                 </div>
                 <div id='author'>
-                    {author}
+                    - {author}
                 </div>
                 <div className='buttons'>
+                    <a 
+                        id='tweet-quote' 
+                        href='twitter.com/intent/tweet' 
+                        target='_blank'
+                    >   
+                        <i class="fa fa-twitter"></i>                    
+                    </a>
+                    <a 
+                        id='tumblr-quote' 
+                        href='#' 
+                        target='_blank'
+                    >   
+                        <i class="fa fa-tumblr"></i>                    
+                    </a>
                     <button 
                         id='new-quote'
-                        onClick={handleClick} //onClick will display the new quote and author
+                        onClick={handleClick} 
                     >
                         New quote
                     </button>
-                    <a 
-                        id='tweet-quote' 
-                        href='twitter.com/intent/tweet' //#10
-                    >                       
-                    </a>
                 </div>
             </div>
         </div>
