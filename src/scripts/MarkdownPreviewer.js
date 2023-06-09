@@ -1,9 +1,16 @@
+import { marked } from 'marked';
+
+marked.use({
+    mangle: false,
+    headerIds: false,
+});
+
 const $ = window.$;
 
-const renderPreview = (dataPre) => {
-    $(document).ready(function() {
-        $("#preview").empty().append(dataPre);
-    });
+const renderPreview = () => {
+    $("#preview").empty();
+    const valueEditor = $('#editor').prop('value');
+    $("#preview").append(marked.parse(marked.parse(valueEditor)));
 }
 
 export default renderPreview;

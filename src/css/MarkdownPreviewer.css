@@ -17,6 +17,7 @@
     background: url('../imagines/background.jpg') no-repeat;
     background-size: cover;
     background-position: center;
+    position: relative;
 }
 
 .editorWrap {
@@ -64,13 +65,13 @@
 }
 
 .previewWrap {
-    position: relative;
-    top: 40px;
+    position: absolute;
+    top: 280px;
     width: 80%;
     min-height: 400px;
     background: transparent;
     border: 2px solid rgba(255, 255, 255, .5);
     backdrop-filter: blur(20px);
     box-shadow: 0 0 30px rgba(0, 0, 0, .5);
-    color: #fff;
+    color: #1a0303;
 }
