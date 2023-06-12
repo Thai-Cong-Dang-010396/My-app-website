@@ -1,8 +1,9 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 
 import '../css/JavaScriptCalculator.css'
 
 const JavaScriptCalculator = () => {
+  const [display, setDisplay] = useState('0')
 
   const butCalculators = [
     {
@@ -68,26 +69,45 @@ const JavaScriptCalculator = () => {
     {
       id: 'decimal',
       value: '.'
-    },
-    {
+    }, {
       id: 'equals',
       value: '='
     }
   ];
+  const arrOperator = ['+', '-',  '*', '/'];
+  
+  const handleNumber = (event) => {
+    const number = event.target.value;
+    console.log(number);
+    (number === 'AC') ? setDisplay('0') : (
+      (display === '0') ? setDisplay(number) : setDisplay(display + number));
+    
+  }
+
+  const handleOperator = (event) => {
+    const operator = event.target.value;
+    setDisplay(display + ' ' + operator + ' ');
+  }
+
+  const handleEqual = () => {
+    setDisplay(eval(display));
+  }
 
   return (
     <div className='app-JavaScripCalculator'>
       <div className='calculator'>
         <div className='formulaScreen'></div>
-        <div id='display'></div>
+        <div id='display'>{display}</div>
         <div className='butCalculator'>
           {butCalculators.map((butCalculator) => (
             <button 
+              key={butCalculator.value}
               id={butCalculator.id} 
               value={butCalculator.value}
-              style={{
-                background: "rgb(102, 102, 102)"
-              }}
+              onClick={
+                (butCalculator.value === '=') ? handleEqual : (
+                  (arrOperator.indexOf(butCalculator.value) === -1) ? handleNumber: handleOperator)                 
+              }
             >
               {butCalculator.value}
             </button>

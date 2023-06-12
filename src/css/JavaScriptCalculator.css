@@ -10,13 +10,46 @@
 }
 
 .calculator {
-    position: relative;
     width: 450px;
     height: 550px;
     border: 2px solid #fff;
     background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#display {
+    height: 20px;
+    position: absolute;
+    top: 140px;
+    width: 185px;
+    text-align: right;
 }
 
 .butCalculator {
-    
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.butCalculator > * {
+    border: 1px solid #fff;
+    color: #162938;
+    padding: 18px;
+    background: #4d4d4d;
+    cursor: pointer;
+}
+
+#clear {
+    background: rgb(172, 57, 57);
+    grid-column: 1 / -3;
+}
+
+#decimal {
+    grid-column: 1 / -3;
+}
+
+#equals {
+    background: rgb(0, 68, 102);
+    grid-column: 3 / span 2;
 }
