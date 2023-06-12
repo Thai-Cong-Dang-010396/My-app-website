@@ -71,8 +71,7 @@ const DrumMachine = () => {
 
     const playSound = (selector) => {
         const audio = document.getElementById(selector);
-        audio.play();
-        setActiveKey(selector);
+        (audio !== null) ? (audio.play() && setActiveKey(selector)): console.warn('Selector not valid');
     }
 
   return (

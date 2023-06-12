@@ -1,0 +1,9 @@
+.app--25-5Clock {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('../imagines/background.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}

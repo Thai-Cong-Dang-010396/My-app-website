@@ -1,0 +1,22 @@
+.app-JavaScripCalculator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('../imagines/background.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    height: 100vh;
+}
+
+.calculator {
+    position: relative;
+    width: 450px;
+    height: 550px;
+    border: 2px solid #fff;
+    background: transparent;
+}
+
+.butCalculator {
+    
+}
