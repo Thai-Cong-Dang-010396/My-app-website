@@ -1,0 +1,25 @@
+.App-drum {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('../imagines/background.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    height: 100vh;
+}
+
+.pad-bank {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.drum-pad {
+    border: 1px solid #162938;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}

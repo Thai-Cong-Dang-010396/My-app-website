@@ -29,7 +29,7 @@ const RandomQuoteMachine = () => {
     <div id='wrapper'>
             <div id='quote-box'>
                 <div id='text'>
-                    <i class="fa fa-quote-left"></i>
+                    <i className="fa fa-quote-left"></i>
                     {quotes}
                 </div>
                 <div id='author'>
@@ -41,14 +41,14 @@ const RandomQuoteMachine = () => {
                         href='twitter.com/intent/tweet' 
                         target='_blank'
                     >   
-                        <i class="fa fa-twitter"></i>                    
+                        <i className="fa fa-twitter"></i>                    
                     </a>
                     <a 
                         id='tumblr-quote' 
                         href='#' 
                         target='_blank'
                     >   
-                        <i class="fa fa-tumblr"></i>                    
+                        <i className="fa fa-tumblr"></i>                    
                     </a>
                     <button 
                         id='new-quote'
