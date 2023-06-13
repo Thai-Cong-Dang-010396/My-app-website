@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
-
+import React, { useState, useEffect, useRef } from 'react'
 import '../css/Clock.css';
+const $ = window.$;
 
 const Clock = () => {
   const [breakNum, setBreakNum] = useState(5)
   const [sessionNum, setSessionNum] = useState(25)  // 0 to 60
 
   useEffect(() => {
-    handleTime()
-  }, [])
+
+  }, [sessionNum])
 
   const handleClickBreak = (event) => {
     const operator = event.target.className;
@@ -22,9 +22,32 @@ const Clock = () => {
     (newSession < 0 || newSession > 60) ? console.warn("Invalid range") : setSessionNum(newSession);
   }
 
-  const handleTime = () => {
-    document.getElementById("time-left").innerHTML = `${sessionNum}` + ":59"
-  };
+  let sessionTimer;
+  let isSessionMode = true;
+  let sessionLength = sessionNum * 60;
+  $(() => {
+    $('.start').click(() => {
+      if (isSessionMode) {
+        sessionTimer = setInterval(() => {
+          sessionLength -= 1;
+          const timerMinutes = Math.floor(sessionLength / 60);
+          const timerSeconds = sessionLength % 60;
+          $('#time-left').text(`${timerMinutes} : ${timerSeconds}`)
+        }, 1000);
+      }
+    })
+
+    $('.stop').click(() => {
+      if (isSessionMode) {
+        clearInterval(sessionTimer);
+      }
+    })
+  })
+
+  const handleReset = () => {
+    setBreakNum(5);
+    setSessionNum(25);
+  }
 
   return (
     <div className='app--25-5Clock'>
@@ -37,6 +60,7 @@ const Clock = () => {
             className='btn-level'
             id='break-decrement'
             value='-'
+            style={{border: "none"}}
             onClick={handleClickBreak}
           >
             <i className='fa fa-arrow-down fa-2x'></i>
@@ -51,6 +75,7 @@ const Clock = () => {
             className='btn-level'
             id='break-increment'
             value='+'
+            style={{border: "none"}}
             onClick={handleClickBreak}
           >
             <i className='fa fa-arrow-up fa-2x'></i>
@@ -63,6 +88,7 @@ const Clock = () => {
             className="btn-level" 
             id="session-decrement" 
             value="-"
+            style={{border: "none"}}
             onClick={handleClickSession}
           >
             <i className="fa fa-arrow-down fa-2x"></i>
@@ -72,6 +98,7 @@ const Clock = () => {
             className="btn-level" 
             id="session-increment" 
             value="+"
+            style={{border: "none"}}
             onClick={handleClickSession}
           >
             <i className="fa fa-arrow-up fa-2x"></i>
@@ -81,16 +108,20 @@ const Clock = () => {
         <div className="timer" style={{color:" white"}}>
           <div className="timer-wrapper">
             <div id="timer-label">Session</div>
-            <div id="time-left">{sessionNum}:00</div>
+            <div id="time-left">{sessionNum} : 00</div>
           </div>
         </div>
         
         <div className="timer-control">
-          <button id="start_stop" onClick={handleTime}>
+          <button className='start' id="start_stop" style={{border: "none"}}>
             <i className="fa fa-play fa-2x"></i>
             <i className="fa fa-pause fa-2x"></i>
           </button>
-          <button id="reset">
+          <button className="stop" id="start_stop" style={{border: "none"}}>
+            <i className="fa fa-play fa-2x"></i>
+            <i className="fa fa-pause fa-2x"></i>
+          </button>
+          <button id="reset" style={{border: "none", marginLeft:"3px"}} onClick={handleReset}>
             <i className="fa fa-refresh fa-2x"></i>
           </button>
           </div>
