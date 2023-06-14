@@ -4,42 +4,77 @@ const $ = window.$;
 
 const Clock = () => {
   const [breakNum, setBreakNum] = useState(5)
-  const [sessionNum, setSessionNum] = useState(25)  // 0 to 60
+  const [sessionNum, setSessionNum] = useState(25)  
+  let sessionTimer = useRef();
+  let isSession = useRef(true);
+  let sessionLength = sessionNum * 60;
+
+  useEffect(() => {
+    console.log('cleanup start...')
+    return () => clearInterval(sessionTimer.current);
+  }, [])
 
   const handleClickBreak = (event) => {
-    const operator = event.target.className;
-    const newBreak = (operator.includes('up')) ? (breakNum + 1): (breakNum - 1);
-    (newBreak < 0 || newBreak > 60) ? console.warn("Invalid range") : setBreakNum(newBreak);
+    if(sessionTimer.current === undefined) {
+      const operator = event.target.className;
+      let newBreak = (operator.includes('up')) ? (breakNum + 1): (breakNum - 1);
+      (newBreak > 0 && newBreak < 61)? setBreakNum(newBreak): (newBreak = breakNum);
+      (!isSession) ? ($('#time-left').text(`${newBreak}` + ':00')): (newBreak = newBreak);
+    }
   }
 
   const handleClickSession = (event) => {
-    const operator = event.target.className;
-    const newSession = (operator.includes('up')) ? (sessionNum + 1): (sessionNum - 1);
-    (newSession < 0 || newSession > 60) ? console.warn("Invalid range") : setSessionNum(newSession);
+    if(sessionTimer.current === undefined) {
+      const operator = event.target.className;
+      let newSession = (operator.includes('up')) ? (sessionNum + 1): (sessionNum - 1);
+      (newSession > 0 && newSession < 61)?(sessionLength = newSession): (sessionLength = -1);
+      (newSession > 0 && newSession < 61)? setSessionNum(newSession): (newSession = sessionNum);
+      if(newSession < 10) {newSession = '0' + newSession};
+      (isSession) ? ($('#time-left').text(`${newSession}` + ':00')): (newSession = newSession);
+    }
   }
 
-  let sessionTimer = useRef();
-  let isSessionMode = true;
-  let sessionLength = sessionNum * 60;
   const handleTime = () => {
     if(sessionTimer.current === undefined) {
-      sessionTimer.current = setInterval(() => {
-        sessionLength -= 1;
-        const timerMinutes = Math.floor(sessionLength / 60);
-        const timerSeconds = sessionLength % 60;
-        $('#time-left').text(`${timerMinutes} : ${timerSeconds}`)
-    }, 1000);
-      console.log(sessionTimer.current );
+      sessionRun();
     } else {
       clearInterval(sessionTimer.current);
       sessionTimer.current = undefined;
     }
   }
 
+  function sessionRun() {
+    sessionTimer.current = setInterval(() => {
+      sessionLength -= 1;
+
+      if(sessionLength < 0 && isSession.current) {
+        $('#timer-label').text('Break');
+        sessionLength = breakNum * 60;
+        isSession.current = !isSession.current;
+      } else if(sessionLength < 0 && !isSession.current) {
+        $('#timer-label').text('Session');
+        sessionLength = sessionNum * 60;
+        isSession.current = !isSession.current;
+      }
+      
+      let timerMinutes ='' + Math.floor(sessionLength / 60);
+      let timerSeconds ='' + sessionLength % 60;
+      if(timerMinutes < 10 ) {timerMinutes = '0' + timerMinutes};
+      if(timerSeconds < 10 ) {timerSeconds = '0' + timerSeconds};
+      $('#time-left').text(`${timerMinutes}:${timerSeconds}`)
+  }, 1000);
+  }
+
   const handleReset = () => {
+    // const audi = $("#beep");
+    // audi.trigger('play');
+    clearInterval(sessionTimer.current);
+    sessionTimer.current = undefined;
+    sessionLength = sessionNum * 60
     setBreakNum(5);
     setSessionNum(25);
-    $('#time-left').text(`${sessionNum}` + ' : 00')
+    $('#timer-label').text('Session');
+    $('#time-left').text('25' + ':00');
   }
 
   return (
@@ -101,7 +136,7 @@ const Clock = () => {
         <div className="timer" style={{color:" white"}}>
           <div className="timer-wrapper">
             <div id="timer-label">Session</div>
-            <div id="time-left">{sessionNum} : 00</div>
+            <div id="time-left">25:00</div>
           </div>
         </div>
         
@@ -113,7 +148,13 @@ const Clock = () => {
           <button id="reset" style={{border: "none", marginLeft:"3px"}} onClick={handleReset}>
             <i className="fa fa-refresh fa-2x"></i>
           </button>
-          </div>
+        </div>
+        <audio 
+          id="beep" 
+          preload="auto" 
+          src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
+        >
+        </audio>
       </div>
     </div>
   )

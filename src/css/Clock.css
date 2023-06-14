@@ -9,22 +9,26 @@
     color: #162938;
     font-size: 30px;
     text-align: center;
+    user-select: none;
 }
 
 .main-title {
     font-size: 50px;
     margin-bottom: 20px;
+    user-select: none;
 }
 
 .length-control {
     display: inline-block;
     width: 250px;
+    user-select: none;
 }
 
 .btn-level {
     display: inline-block;
     margin: 0 8px 8px 8px;
     background: transparent;
+    user-select: none;
 }
 
 .length-control button {
