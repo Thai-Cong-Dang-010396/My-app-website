@@ -6,10 +6,6 @@ const Clock = () => {
   const [breakNum, setBreakNum] = useState(5)
   const [sessionNum, setSessionNum] = useState(25)  // 0 to 60
 
-  useEffect(() => {
-
-  }, [sessionNum])
-
   const handleClickBreak = (event) => {
     const operator = event.target.className;
     const newBreak = (operator.includes('up')) ? (breakNum + 1): (breakNum - 1);
@@ -22,31 +18,28 @@ const Clock = () => {
     (newSession < 0 || newSession > 60) ? console.warn("Invalid range") : setSessionNum(newSession);
   }
 
-  let sessionTimer;
+  let sessionTimer = useRef();
   let isSessionMode = true;
   let sessionLength = sessionNum * 60;
-  $(() => {
-    $('.start').click(() => {
-      if (isSessionMode) {
-        sessionTimer = setInterval(() => {
-          sessionLength -= 1;
-          const timerMinutes = Math.floor(sessionLength / 60);
-          const timerSeconds = sessionLength % 60;
-          $('#time-left').text(`${timerMinutes} : ${timerSeconds}`)
-        }, 1000);
-      }
-    })
-
-    $('.stop').click(() => {
-      if (isSessionMode) {
-        clearInterval(sessionTimer);
-      }
-    })
-  })
+  const handleTime = () => {
+    if(sessionTimer.current === undefined) {
+      sessionTimer.current = setInterval(() => {
+        sessionLength -= 1;
+        const timerMinutes = Math.floor(sessionLength / 60);
+        const timerSeconds = sessionLength % 60;
+        $('#time-left').text(`${timerMinutes} : ${timerSeconds}`)
+    }, 1000);
+      console.log(sessionTimer.current );
+    } else {
+      clearInterval(sessionTimer.current);
+      sessionTimer.current = undefined;
+    }
+  }
 
   const handleReset = () => {
     setBreakNum(5);
     setSessionNum(25);
+    $('#time-left').text(`${sessionNum}` + ' : 00')
   }
 
   return (
@@ -113,11 +106,7 @@ const Clock = () => {
         </div>
         
         <div className="timer-control">
-          <button className='start' id="start_stop" style={{border: "none"}}>
-            <i className="fa fa-play fa-2x"></i>
-            <i className="fa fa-pause fa-2x"></i>
-          </button>
-          <button className="stop" id="start_stop" style={{border: "none"}}>
+          <button id="start_stop" style={{border: "none"}} onClick={handleTime}>
             <i className="fa fa-play fa-2x"></i>
             <i className="fa fa-pause fa-2x"></i>
           </button>
