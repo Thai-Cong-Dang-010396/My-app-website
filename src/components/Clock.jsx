@@ -1,36 +1,39 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import '../css/Clock.css';
 const $ = window.$;
 
 const Clock = () => {
   const [breakNum, setBreakNum] = useState(5)
   const [sessionNum, setSessionNum] = useState(25)  
+  const [sessionLength, setSessionLength] = useState(sessionNum * 60);
   let sessionTimer = useRef();
   let isSession = useRef(true);
-  let sessionLength = sessionNum * 60;
-
-  useEffect(() => {
-    console.log('cleanup start...')
-    return () => clearInterval(sessionTimer.current);
-  }, [])
 
   const handleClickBreak = (event) => {
+    const operator = event.target.className;
+    let newBreak = (operator.includes('up')) ? (breakNum + 1): (breakNum - 1);
     if(sessionTimer.current === undefined) {
-      const operator = event.target.className;
-      let newBreak = (operator.includes('up')) ? (breakNum + 1): (breakNum - 1);
-      (newBreak > 0 && newBreak < 61)? setBreakNum(newBreak): (newBreak = breakNum);
-      (!isSession) ? ($('#time-left').text(`${newBreak}` + ':00')): (newBreak = newBreak);
+      if(newBreak > 0 && newBreak < 61) {
+        setBreakNum(newBreak);
+      }
+      if(!isSession.current && newBreak > 0 && newBreak < 61) {      
+        setSessionLength(newBreak * 60);
+        (newBreak < 10)? ($('#time-left').text('0' + `${newBreak}` + ':00')): ($('#time-left').text(`${newBreak}` + ':00'));
+      }
     }
   }
 
   const handleClickSession = (event) => {
+    const operator = event.target.className;
+    let newSession = (operator.includes('up')) ? (sessionNum + 1): (sessionNum - 1);
     if(sessionTimer.current === undefined) {
-      const operator = event.target.className;
-      let newSession = (operator.includes('up')) ? (sessionNum + 1): (sessionNum - 1);
-      (newSession > 0 && newSession < 61)?(sessionLength = newSession): (sessionLength = -1);
-      (newSession > 0 && newSession < 61)? setSessionNum(newSession): (newSession = sessionNum);
-      if(newSession < 10) {newSession = '0' + newSession};
-      (isSession) ? ($('#time-left').text(`${newSession}` + ':00')): (newSession = newSession);
+      if(newSession > 0 && newSession < 61){
+        setSessionNum(newSession);
+      }
+      if(isSession.current && newSession > 0 && newSession < 61) {
+        setSessionLength(newSession * 60);
+        (newSession < 10)? ($('#time-left').text('0' + `${newSession}` + ':00')): ($('#time-left').text(`${newSession}` + ':00'));     
+      }
     }
   }
 
@@ -44,35 +47,41 @@ const Clock = () => {
   }
 
   function sessionRun() {
+    let newSessionLength = sessionLength;
     sessionTimer.current = setInterval(() => {
-      sessionLength -= 1;
-
-      if(sessionLength < 0 && isSession.current) {
+      newSessionLength -= 1; 
+      setSessionLength(newSessionLength);
+      if(newSessionLength < 0 && isSession.current) {
         $('#timer-label').text('Break');
-        sessionLength = breakNum * 60;
-        isSession.current = !isSession.current;
-      } else if(sessionLength < 0 && !isSession.current) {
+        newSessionLength = breakNum * 60;
+        isSession.current = false;
+      } else if(newSessionLength < 0 && !isSession.current) {
         $('#timer-label').text('Session');
-        sessionLength = sessionNum * 60;
-        isSession.current = !isSession.current;
+        newSessionLength = sessionNum * 60;
+        isSession.current = true;
       }
       
-      let timerMinutes ='' + Math.floor(sessionLength / 60);
-      let timerSeconds ='' + sessionLength % 60;
+      let timerMinutes ='' + Math.floor(newSessionLength / 60);
+      let timerSeconds ='' + newSessionLength % 60;
       if(timerMinutes < 10 ) {timerMinutes = '0' + timerMinutes};
       if(timerSeconds < 10 ) {timerSeconds = '0' + timerSeconds};
-      $('#time-left').text(`${timerMinutes}:${timerSeconds}`)
-  }, 1000);
+      if (timerMinutes == '00' && timerSeconds == '00') {
+        document.getElementById('beep').play();
+      };
+      $('#time-left').text(`${timerMinutes}:${timerSeconds}`);
+      console.log(`${timerMinutes}:${timerSeconds}`);
+    }, 1000);
   }
 
   const handleReset = () => {
-    // const audi = $("#beep");
-    // audi.trigger('play');
     clearInterval(sessionTimer.current);
     sessionTimer.current = undefined;
-    sessionLength = sessionNum * 60
-    setBreakNum(5);
+    isSession.current = true;
     setSessionNum(25);
+    setSessionLength(25 * 60);
+    setBreakNum(5);
+    document.getElementById('beep').currentTime = 0;
+    document.getElementById('beep').pause();
     $('#timer-label').text('Session');
     $('#time-left').text('25' + ':00');
   }
@@ -96,9 +105,7 @@ const Clock = () => {
           <div 
             className='btn-level'
             id='break-length'
-          >
-            {breakNum}
-          </div>
+          >{breakNum}</div>
           <button
             className='btn-level'
             id='break-increment'
