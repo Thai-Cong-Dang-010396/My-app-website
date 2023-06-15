@@ -2,10 +2,28 @@ import React, { useState, useRef } from 'react'
 import '../css/Clock.css';
 const $ = window.$;
 
+const accurateInterval = function(fn, time) {
+  let cancel, nextAt, timeout, wrapper;
+  nextAt = new Date().getTime + time;
+  timeout = null;
+  wrapper = function() {
+    nextAt += time;
+    timeout = setTimeout(wrapper, nextAt - new Date().getTime());
+    return fn();
+  }; 
+  cancel = function() {
+    return clearTimeout(timeout);
+  };
+  timeout = setTimeout(wrapper, nextAt - new Date().getTime());
+  return {
+    cancel: cancel
+  };
+};
+
 const Clock = () => {
   const [breakNum, setBreakNum] = useState(5)
   const [sessionNum, setSessionNum] = useState(25)  
-  const [sessionLength, setSessionLength] = useState(sessionNum * 60);
+  const [sessionLength, setSessionLength] = useState(25 * 60);
   let sessionTimer = useRef();
   let isSession = useRef(true);
 
@@ -48,10 +66,10 @@ const Clock = () => {
 
   function sessionRun() {
     let newSessionLength = sessionLength;
-    sessionTimer.current = setInterval(() => {
+    sessionTimer.current = setInterval(function() {
       newSessionLength -= 1; 
       setSessionLength(newSessionLength);
-      if(newSessionLength < 0 && isSession.current) {
+      if((newSessionLength) < 0 && isSession.current) {
         $('#timer-label').text('Break');
         newSessionLength = breakNum * 60;
         isSession.current = false;
@@ -62,7 +80,7 @@ const Clock = () => {
       }
       
       let timerMinutes ='' + Math.floor(newSessionLength / 60);
-      let timerSeconds ='' + newSessionLength % 60;
+      let timerSeconds ='' + (newSessionLength - timerMinutes * 60);
       if(timerMinutes < 10 ) {timerMinutes = '0' + timerMinutes};
       if(timerSeconds < 10 ) {timerSeconds = '0' + timerSeconds};
       if (timerMinutes == '00' && timerSeconds == '00') {
@@ -73,9 +91,22 @@ const Clock = () => {
     }, 1000);
   }
 
+  function clockify() {
+    const SECONDS_IN_MINUTES = 60;
+    let minutes = Math.floor(sessionLength / SECONDS_IN_MINUTES);
+    let seconds = sessionLength - minutes * SECONDS_IN_MINUTES;
+
+    minutes = (minutes < 10 ? "0" : "") + minutes;
+    seconds = (seconds < 10 ? "0" : "") + seconds;
+
+    return minutes + ":" + seconds;
+  }
+
   const handleReset = () => {
-    clearInterval(sessionTimer.current);
-    sessionTimer.current = undefined;
+    if(sessionTimer.current !== undefined) {
+      clearInterval(sessionTimer.current);
+      sessionTimer.current = undefined;
+    }
     isSession.current = true;
     setSessionNum(25);
     setSessionLength(25 * 60);
@@ -143,7 +174,7 @@ const Clock = () => {
         <div className="timer" style={{color:" white"}}>
           <div className="timer-wrapper">
             <div id="timer-label">Session</div>
-            <div id="time-left">25:00</div>
+            <div id="time-left" className='time-left'>{clockify()}</div>
           </div>
         </div>
         
