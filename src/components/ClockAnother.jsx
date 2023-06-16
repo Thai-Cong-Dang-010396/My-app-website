@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
-import '../css/ClockAnother.css';
-const $ = window.$;
+import '../css/ClockAnother.scss';
+import classnames from "https://cdn.skypack.dev/classnames@2.3.1";
 
 const accurateInterval = function(fn, time) {
     let cancel, nextAt, timeout, wrapper;
-    nextAt = new Date().getTime + time;
+    nextAt = new Date().getTime() + time;
     timeout = null;
     wrapper = function() {
       nextAt += time;
@@ -34,49 +34,52 @@ const ClockAnother = () => {
     const [reset, setReset] = useState(0);
 
   return (
-    <div className='clock'>
-        <div className='title'>25 + 5 Clock</div>
-        <div className='length-setters'>
-            <LengthSetter
-                type='break'
-                disabled={started}
-                lablel='Break Length'
-                length={breakLength}
-                setter={setBreakLength}
+    <div id='app-clock'>
+        <div className='clock'>
+            <div className='title'>25 + 5 Clock</div>
+            <div className='length-setters'>
+                <LengthSetter
+                    type='break'
+                    disabled={started}
+                    label='Break Length'
+                    length={breakLength}
+                    setter={setBreakLength}
+                />
+                <LengthSetter
+                    type='session'
+                    disabled={started}
+                    label='Session Length'
+                    length={sessionLength}
+                    setter={setSessionLength}
+                />
+            </div>
+            <Display
+                {...{
+                    started,
+                    reset,
+                    activeClock,
+                    setActiveClock,
+                    breakLength,
+                    sessionLength
+                }}
             />
-            <LengthSetter
-                type='session'
-                disabled={started}
-                lablel='Session Length'
-                length={sessionLength}
-                setter={setSessionLength}
+            <Controls 
+                {...{setStarted, onReset: handleReset}}
             />
+            <p></p>
         </div>
-        <Display
-            {...{
-                started,
-                reset,
-                activeClock,
-                setActiveClock,
-                breakLength,
-                sessionLength
-            }}
-        />
-        <Controls 
-            {...{setStarted, onReset: handleReset}}
-        />
-        <p></p>
     </div>
   );
 
   function handleReset() {
+    document.getElementById('beep').currentTime = 0;
+    document.getElementById('beep').pause();
     setBreakLength(DEFAULT_BREAK_LENGTH);
-
     setSessionLength(DEFAULT_SESSION_LENGTH);
     setActiveClock("S");
     setReset(reset + 1);
     setStarted(false);
-  }
+  };
 }
 
 function LengthSetter({ type, label, length, setter, disabled }) {
@@ -87,11 +90,9 @@ function LengthSetter({ type, label, length, setter, disabled }) {
 
     return (
         <div className='length-setter'>
-            <div id={labelId} className='label'>
-                {label}
-            </div>
+            <div id={labelId} className='label'>{label}</div>    
             <button id={decrementId}
-                onClick={derement}
+                onClick={decrement}
             >
                 <i className='fa fa-arrow-down fa-2x'></i>
             </button>
@@ -105,6 +106,16 @@ function LengthSetter({ type, label, length, setter, disabled }) {
     );
 
     function decrement() {
+        if (disabled) {
+            return;
+        }
+
+        if (length > 1) {
+            setter(length -1);
+        }
+    }
+
+    function increment() {
         if (disabled) {
             return;
         }
@@ -156,9 +167,7 @@ function Display({
     }, [reset]);
 
     return (
-        <div className={classnames("display", {
-            imminent: timer < 60
-        })}>
+        <div className={classnames("display", { imminent: timer < 60 })}>
             <div id='timer-label'>
                 {activeClock === "S" ? "Session" : "Break"}
             </div>
@@ -203,7 +212,7 @@ function Display({
     }
 }
 
-function Controls({ setStarted, onReset}) {
+function Controls({ setStarted, onReset }) {
     return (
         <div className='controls'>
             <button
@@ -224,6 +233,5 @@ function Controls({ setStarted, onReset}) {
         setStarted((started) => !started);
     }
 }
-
 
 export default ClockAnother

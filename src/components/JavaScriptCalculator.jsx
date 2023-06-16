@@ -16,7 +16,7 @@ const JavaScriptCalculator = () => {
     }, 
     {
       id: 'multiply',
-      value: 'x'
+      value: '*'
     },
     {
       id: 'seven',
