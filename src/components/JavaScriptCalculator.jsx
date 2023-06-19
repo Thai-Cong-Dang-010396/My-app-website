@@ -96,8 +96,12 @@ const JavaScriptCalculator = () => {
   return (
     <div className='app-JavaScripCalculator'>
       <div className='calculator'>
-        <div className='formulaScreen'></div>
-        <div id='display'>{display}</div>
+        <div>
+          <div className='formulaScreen'></div>
+          <div style={{width: "240px", textAlign:"right"}}>
+            <div id='display'>{display}</div>
+          </div>
+        </div>
         <div className='butCalculator'>
           {butCalculators.map((butCalculator) => (
             <button 

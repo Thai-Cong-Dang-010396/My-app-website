@@ -19,7 +19,9 @@ body {
     justify-content: center;
     align-items: center;
 
-    background-color: #1e555c;
+    background: url('../imagines/background.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
     color: white;
 
     user-select: none;

@@ -1,5 +1,6 @@
 .app-JavaScripCalculator {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background: url('../imagines/background.jpg') no-repeat;
@@ -9,25 +10,15 @@
     height: 100vh;
 }
 
-.calculator {
-    width: 450px;
-    height: 550px;
-    border: 2px solid #fff;
-    background: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 #display {
+    display: inline;
     height: 20px;
-    position: absolute;
-    top: 140px;
-    width: 185px;
     text-align: right;
+    font-size: 20px;
 }
 
 .butCalculator {
+    width: 250px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
