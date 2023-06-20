@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
 import '../css/Clock.scss';
-import classnames from "https://cdn.skypack.dev/classnames@2.3.1";
 
 const accurateInterval = function(fn, time) {
     let cancel, nextAt, timeout, wrapper;
@@ -167,7 +166,7 @@ function Display({
     }, [reset]);
 
     return (
-        <div className={classnames("display", { imminent: timer < 60 })}>
+        <div className="display">
             <div id='timer-label'>
                 {activeClock === "S" ? "Session" : "Break"}
             </div>

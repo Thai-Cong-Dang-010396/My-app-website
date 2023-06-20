@@ -3,7 +3,8 @@ import React, {useState, useEffect} from 'react'
 import '../css/JavaScriptCalculator.css'
 
 const JavaScriptCalculator = () => {
-  const [display, setDisplay] = useState('0')
+  const [display, setDisplay] = useState('')
+  const [valuePress, setValuePress] = useState('0')
 
   const butCalculators = [
     {
@@ -75,31 +76,59 @@ const JavaScriptCalculator = () => {
     }
   ];
   const arrOperator = ['+', '-',  '*', '/'];
-  
+
   const handleNumber = (event) => {
     const number = event.target.value;
-    console.log(number);
-    (number === 'AC') ? setDisplay('0') : (
-      (display === '0') ? setDisplay(number) : setDisplay(display + number));
+    const indexLastOperator = display.toString().lastIndexOf(' ');
+    const lastTermNumber = (indexLastOperator === -1) ? display : display.toString().slice(indexLastOperator);
+
+    if(number === 'AC') {
+      setValuePress('0')
+      return setDisplay('')
+    };
     
+    if(number === '.' && display.endsWith('.')) {
+      return;
+    } else if(number === '.' && lastTermNumber.includes('.')) {
+      return;
+    };
+
+    if(display === '0') {
+      setDisplay(number)
+    }else {
+      setDisplay(display + number)
+    }; 
+    setValuePress(number)
+
   }
 
   const handleOperator = (event) => {
     const operator = event.target.value;
+    setValuePress(operator)
     setDisplay(display + ' ' + operator + ' ');
   }
 
   const handleEqual = () => {
-    setDisplay(eval(display));
+    if(display.toString().includes('=')) {
+      setValuePress((preValuePress) => {
+        setDisplay(preValuePress)
+      })
+      return;
+    }
+    const resutls = eval(display);
+    setValuePress(resutls);
+    setDisplay(preDisplay => preDisplay + ' = ' + resutls)
   }
 
   return (
     <div className='app-JavaScripCalculator'>
       <div className='calculator'>
         <div>
-          <div className='formulaScreen'></div>
+          <div className='formulaScreen' style={{width: "240px", textAlign:"right"}}>
+            <div>{display}</div>
+          </div>
           <div style={{width: "240px", textAlign:"right"}}>
-            <div id='display'>{display}</div>
+            <div id='display'>{valuePress}</div>
           </div>
         </div>
         <div className='butCalculator'>
