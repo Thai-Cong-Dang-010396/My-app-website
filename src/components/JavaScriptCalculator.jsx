@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import '../css/JavaScriptCalculator.css'
+import '../css/JavaScriptCalculator.scss'
 
 const JavaScriptCalculator = () => {
   const operators = ["*", "/", "+", "-"];
@@ -9,92 +9,92 @@ const JavaScriptCalculator = () => {
 
     return (
       <div id='app-Calculator'>
-        <div class="calculator">
-            <div class="exp">{exp}</div>
-            <div id="display" class="io">
+        <div className="calculator">
+            <div className="exp">{exp}</div>
+            <div id="display" className="io">
                 {io}
             </div>
-            <div class="ac">
+            <div className="ac">
                 <button id="clear" onClick={clear}>
                     AC
                 </button>
             </div>
-            <div class="d">
+            <div className="d">
                 <button id="divide" onClick={() => op("/")}>
                     /
                 </button>
             </div>
-            <div class="m">
+            <div className="m">
                 <button id="multiply" onClick={() => op("*")}>
                     X
                 </button>
             </div>
-            <div class="n7">
+            <div className="n7">
                 <button id="seven" onClick={() => n("7")}>
                     7
                 </button>
             </div>
-            <div class="n8">
+            <div className="n8">
                 <button id="eight" onClick={() => n("8")}>
                     8
                 </button>
             </div>
-            <div class="n9">
+            <div className="n9">
                 <button id="nine" onClick={() => n("9")}>
                     9
                 </button>
             </div>
-            <div class="s">
+            <div className="s">
                 <button id="subtract" onClick={() => op("-")}>
                     -
                 </button>
             </div>
-            <div class="n4">
+            <div className="n4">
                 <button id="four" onClick={() => n("4")}>
                     4
                 </button>
             </div>
-            <div class="n5">
+            <div className="n5">
                 <button id="five" onClick={() => n("5")}>
                     5
                 </button>
             </div>
-            <div class="n6">
+            <div className="n6">
                 <button id="six" onClick={() => n("6")}>
                     6
                 </button>
             </div>
-            <div class="a">
+            <div className="a">
                 <button id="add" onClick={() => op("+")}>
                     +
                 </button>
             </div>
-            <div class="n1">
+            <div className="n1">
                 <button id="one" onClick={() => n("1")}>
                     1
                 </button>
             </div>
-            <div class="n2">
+            <div className="n2">
                 <button id="two" onClick={() => n("2")}>
                     2
                 </button>
             </div>
-            <div class="n3">
+            <div className="n3">
                 <button id="three" onClick={() => n("3")}>
                     3
                 </button>
             </div>
-            <div class="eq">
+            <div className="eq">
                 <button id="equals" onClick={solve}>
                     =
                 </button>
             </div>
-            <div class="n0">
+            <div className="n0">
                 <button id="zero" onClick={() => n("0")}>
                     0
                 </button>
             </div>
-            <div class="dec">
+            <div className="dec">
                 <button id="decimal" onClick={() => n(".")}>
                     .
                 </button>
